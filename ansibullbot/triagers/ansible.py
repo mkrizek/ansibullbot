@@ -1092,6 +1092,15 @@ class AnsibleTriage(DefaultTriager):
                 if label in iw.labels and not iw.history.was_labeled(label):
                     actions.unlabel.append(label)
 
+        if self.meta[u'is_new_module'] or self.meta[u'is_new_plugin']:
+            if not iw.history.last_date_for_boilerplate(u'new_plugin'):
+                comment = self.render_boilerplate(
+                    tvars,
+                    boilerplate=u'new_plugin'
+                )
+
+                actions.comments.append(comment)
+
         # component labels
         if not self.meta[u'is_bad_pr']:
             if self.meta.get(u'component_labels') and not self.meta.get(u'merge_commits'):
